@@ -1,0 +1,40 @@
+@import "../../styles/main.scss";
+
+.paginator {
+  ul {
+    text-align: center;
+    display: inline-block;
+    padding: 0;
+  }
+
+  li {
+    display: inline-block;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    margin: 0.2rem;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+
+    a {
+      line-height: 20px;
+    }
+
+    &:hover {
+      background-color: rgb(217, 232, 243);
+    }
+
+    &.next,
+    &.previous {
+      border: 1px solid #333;
+      border-radius: 50%;
+      color: rgb(68, 68, 68);
+      background-color: rgb(241, 246, 250);
+
+      &:hover {
+        background-color: rgb(217, 219, 221);
+      }
+    }
+  }
+}
