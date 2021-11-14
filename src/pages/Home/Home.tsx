@@ -23,7 +23,7 @@ function Home() {
   const [infoLoading, setInfoLoading] = useState<Boolean>(false);
   const [patterns, setPatterns] = useState<Array<Pattern>>([]);
   const [filteredPatterns, setFilteredPatterns] = useState<Array<Pattern>>([]);
-  const [args, setArgs] = useState<Array<number>>([1, 2, 1, 0]);
+  const [args, setArgs] = useState<Array<number>>([3, 4, 2, 0]);
 
   const onFilterChange = async (e: any, index: number) => {
     const newArgs = args;
