@@ -132,15 +132,13 @@ const filterPatterns = (list: Array<Pattern>, args: Array<number>): Array<Patter
         }
         break;
       case 4:
-        for (let j = 0; j < 4; j++) {
-          if (
-            currentArgs[0] == patternArgs[j] &&
-            currentArgs[1] == patternArgs[(1 + j) % 4] &&
-            currentArgs[2] == patternArgs[(2 + j) % 4] &&
-            currentArgs[3] == patternArgs[(3 + j) % 4]
-          ) {
-            currentPatterns.push(list[i]);
-          }
+        if (
+          currentArgs[0] == patternArgs[0] &&
+          currentArgs[1] == patternArgs[1] &&
+          currentArgs[2] == patternArgs[2] &&
+          currentArgs[3] == patternArgs[3]
+        ) {
+          currentPatterns.push(list[i]);
         }
         break;
 

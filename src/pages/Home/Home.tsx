@@ -36,6 +36,11 @@ function Home() {
       await setInfoLoading(false);
     }
   };
+  const mapIncrement = (n: number): string => {
+    if (n === 0) return '';
+    else if (n < 0) return '-' + n;
+    else return '' + n;
+  };
 
   // Init
   useEffect(() => {
@@ -56,7 +61,7 @@ function Home() {
       {pageLoading && <LoadingDots />}
       <div className="inputFields">
         <div className="arguments">
-          <span>Arguments 3 out of {argumentsCount}: </span>
+          <span>Filter patterns by arguments: </span>
           <input
             type="number"
             min={-maxIncrement}
@@ -81,14 +86,14 @@ function Home() {
             disabled={infoLoading ? true : false}
             onChange={(e) => onFilterChange(e, 2)}
           />
-          {/* <input
+          <input
             type="number"
             min={-maxIncrement}
             max={maxIncrement}
             value={args[3] === 0 ? '' : args[3]}
             disabled={infoLoading ? true : false}
             onChange={(e) => onFilterChange(e, 3)}
-          /> */}
+          />
         </div>
         <div className="highest-note">
           <span>Max note: </span>
