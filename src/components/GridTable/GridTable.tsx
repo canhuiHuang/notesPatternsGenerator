@@ -1,8 +1,10 @@
-import React, { useState, useEffect, FC } from "react";
-import ReactPaginate from "react-paginate";
-import "./GridTable.scss";
-import PatternRow from "./PatternRow";
-import ArgumentsRow from "./ArgumentsRow";
+import React, { useState, useEffect, FC } from 'react';
+import ReactPaginate from 'react-paginate';
+import './GridTable.scss';
+import PatternRow from './PatternRow';
+import ArgumentsRow from './ArgumentsRow';
+import Select from '../Select/Select';
+import LoadingSpinner from '../Loading/Spinner/Spinner';
 
 interface Pattern {
   pattern: Array<number>;
@@ -12,15 +14,14 @@ interface Pattern {
 interface Props {
   head: Array<String>;
   items: Array<Pattern>;
-  itemsPerPage: number;
+  loadingInfo: Boolean;
 }
 
-const GridTable: FC<Props> = ({ head, items, itemsPerPage }) => {
-  const [loading, setLoading] = useState(false);
+const GridTable: FC<Props> = ({ head, items, loadingInfo }) => {
+  const [loading, setLoading] = useState(true);
+  const [itemsPerPage, setItemsPerPage] = useState(12);
   const [currentItems, setCurrentItems] = useState(items);
-  const [pageCount, setPageCount] = useState(
-    Math.ceil(items.length / itemsPerPage)
-  );
+  const [pageCount, setPageCount] = useState(Math.ceil(items.length / itemsPerPage));
   const [itemOffset, setItemOffset] = useState(0);
 
   const tableHead = () => {
@@ -29,7 +30,7 @@ const GridTable: FC<Props> = ({ head, items, itemsPerPage }) => {
       headLabels.push(
         <li className="gt-cell" key={i}>
           {head[i]}
-        </li>
+        </li>,
       );
     }
     return <ul className="gt-head gt-row">{headLabels}</ul>;
@@ -46,43 +47,46 @@ const GridTable: FC<Props> = ({ head, items, itemsPerPage }) => {
           <div className="gt-cell">
             <ArgumentsRow args={currentItems[i].args} />
           </div>
-        </li>
+        </li>,
       );
     }
     return <ul className="gt-body gt-row">{rows}</ul>;
   };
 
-  const handlePageClick = (event: any) => {
+  const handlePageClick = (event: any): void => {
     const newOffset = (event.selected * itemsPerPage) % items.length;
-    console.log(
-      `User requested page number ${event.selected}, which is offset ${newOffset}`
-    );
     setItemOffset(newOffset);
+  };
+
+  const handleOptionSelect = (event: any): void => {
+    setItemsPerPage(event.target.value);
   };
 
   // Lifecycle
   useEffect(() => {
-    // Fetch items from another resources.
     const endOffset = itemOffset + itemsPerPage;
-    console.log(`Loading items from ${itemOffset} to ${endOffset}`);
     setCurrentItems(items.slice(itemOffset, endOffset));
     setPageCount(Math.ceil(items.length / itemsPerPage));
   }, [itemOffset, itemsPerPage, items]);
 
   return (
-    <div className={`grid-table ${loading ? "loading" : ""}`}>
-      {tableHead()}
-      {tableBody()}
+    <div className="grid-table-container">
+      <div className="grid-table">
+        {loadingInfo && <LoadingSpinner />}
+        {tableHead()}
+        {tableBody()}
+      </div>
       <div className="paginator">
         <ReactPaginate
           breakLabel="..."
           nextLabel="🡺"
           onPageChange={handlePageClick}
-          pageRangeDisplayed={5}
+          pageRangeDisplayed={6}
           pageCount={pageCount}
           previousLabel="🡸"
           marginPagesDisplayed={1}
         />
+        {/* <Select value={itemsPerPage} values={[5, 10, 15, 20, 25]} onOptionSelect={handleOptionSelect} /> */}
       </div>
     </div>
   );

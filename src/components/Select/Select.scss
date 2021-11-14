@@ -1,0 +1,56 @@
+@import '../../styles/main.scss';
+
+$glass: rgba(255, 255, 255, 0.2);
+$glass-icon: rgba(255, 255, 255, 0.3);
+$gradient: linear-gradient(35deg, red, purple);
+$option: #320a28;
+
+.custom-select {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  position: inherit;
+  width: 300px;
+  background-color: transparent;
+  .select-arrow {
+    position: absolute;
+    color: $dark-green-pastel;
+    font-size: 25px;
+    transform: translateX(-20px);
+    z-index: -10;
+  }
+}
+
+/* <select> styles */
+select {
+  /* Reset */
+  appearance: none;
+  border: 2px solid $green-pastel;
+  background-color: transparent;
+
+  outline: 0;
+  font: inherit;
+  /* Personalize */
+  height: 3em;
+  padding: 0 4em 0 1em;
+
+  color: $common-color;
+  border-radius: 0.25em;
+  cursor: pointer;
+
+  /* <option> colors */
+  option {
+    color: inherit;
+    border: 2px solid $green-pastel;
+  }
+
+  /* Remove focus outline */
+  &:focus {
+    outline: none;
+  }
+
+  /* Remove IE arrow */
+  &::-ms-expand {
+    display: none;
+  }
+}

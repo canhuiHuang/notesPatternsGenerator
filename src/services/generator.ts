@@ -15,7 +15,6 @@ const getPattern = (args: Array<number>, maxNote: number): Pattern => {
   const pattern = [1];
   for (let currentNote = 1, incrementIndex = 0; currentNote < maxNote; incrementIndex = (incrementIndex + 1) % args.length) {
     currentNote += args[incrementIndex];
-    // console.log(currentNote, "incrementIndex: ", incrementIndex);
 
     // Interpret the resulting negative notes
     // 0 --> 7
@@ -39,7 +38,6 @@ const getPattern = (args: Array<number>, maxNote: number): Pattern => {
       pattern.push(currentNote);
     }
   }
-  console.log(pattern);
 
   return { pattern, args };
 };
@@ -84,8 +82,79 @@ const getAllPossiblePatterns = (maxIncrement: number, maxNote: number): Array<Pa
   return patterns;
 };
 
+const filterPatterns = (list: Array<Pattern>, args: Array<number>): Array<Pattern> => {
+  //setLoading(true);
+
+  // If there are no arguments
+  if (args[0] === 0 && args[1] === 0 && args[2] === 0) {
+    return list;
+  }
+
+  // Find all patterns that match
+  const currentPatterns: Array<Pattern> = [];
+
+  // Get current Args
+  const currentArgs: Array<number> = [];
+  for (let k = 0; k < args.length; k++) {
+    if (args[k] !== 0) {
+      currentArgs.push(args[k]);
+    }
+  }
+
+  for (let i = 0; i < list.length; i++) {
+    // Find match
+    const patternArgs = list[i].args;
+
+    switch (currentArgs.length) {
+      case 1:
+        for (let j = 0; j < 4; j++) {
+          if (currentArgs[0] == patternArgs[j]) {
+            currentPatterns.push(list[i]);
+          }
+        }
+        break;
+      case 2:
+        for (let j = 0; j < 4; j++) {
+          if (currentArgs[0] == patternArgs[j] && currentArgs[1] == patternArgs[(1 + j) % 4]) {
+            currentPatterns.push(list[i]);
+          }
+        }
+        break;
+      case 3:
+        for (let j = 0; j < 4; j++) {
+          if (
+            currentArgs[0] == patternArgs[j] &&
+            currentArgs[1] == patternArgs[(1 + j) % 4] &&
+            currentArgs[2] == patternArgs[(2 + j) % 4]
+          ) {
+            currentPatterns.push(list[i]);
+          }
+        }
+        break;
+      case 4:
+        for (let j = 0; j < 4; j++) {
+          if (
+            currentArgs[0] == patternArgs[j] &&
+            currentArgs[1] == patternArgs[(1 + j) % 4] &&
+            currentArgs[2] == patternArgs[(2 + j) % 4] &&
+            currentArgs[3] == patternArgs[(3 + j) % 4]
+          ) {
+            currentPatterns.push(list[i]);
+          }
+        }
+        break;
+
+      default:
+        currentPatterns.push(list[i]);
+    }
+  }
+  //setLoading(false);
+  return currentPatterns;
+};
+
 const generator = {
   getPattern,
   getAllPossiblePatterns,
+  filterPatterns,
 };
 export default generator;

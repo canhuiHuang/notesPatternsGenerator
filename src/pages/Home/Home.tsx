@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { wrap } from 'comlink';
 import './Home.scss';
 import GridTable from '../../components/GridTable/GridTable';
-import generator from '../../services/generator';
+import LoadingDots from '../../components/Loading/Dots/Dots';
 
 interface Pattern {
   pattern: Array<number>;
@@ -9,52 +10,92 @@ interface Pattern {
 }
 
 function Home() {
-  const head = ['Pattern', 'Arguments'];
+  const head = ['🎶 Pattern', 'Arguments 🎼'];
   const maxIncrement = 8;
+  const argumentsCount = 4;
   const highestNote = 10;
 
+  // Set up worker
+  const worker = new Worker('./worker', { name: 'runGeneratorWorker', type: 'module' });
+  const { getAllPossiblePatterns, filterPatterns } = wrap<import('./worker').RunGeneratorWorker>(worker);
+
+  const [pageLoading, setPageLoading] = useState<Boolean>(true);
+  const [infoLoading, setInfoLoading] = useState<Boolean>(false);
   const [patterns, setPatterns] = useState<Array<Pattern>>([]);
-  const [args, setArgs] = useState<Array<number>>([0, 0, 0, 0]);
+  const [filteredPatterns, setFilteredPatterns] = useState<Array<Pattern>>([]);
+  const [args, setArgs] = useState<Array<number>>([1, 2, 1, 0]);
 
-  const filter = (): Array<Pattern> => {
-    const filteredPatterns: Array<Pattern> = [];
-    for (let i = 0; i < patterns.length; i++) {
-      // Check if the args of current pattern contains the state args.
-    }
-
-    return filteredPatterns;
-  };
-
-  const onFilterChange = (e: any, index: number): void => {
+  const onFilterChange = async (e: any, index: number) => {
     const newArgs = args;
-    newArgs[index] = e.target.value;
+    newArgs[index] = e.target.value == 0 ? '' : e.target.value;
 
     if (e.target.value >= -8 && e.target.value <= 8) {
+      setInfoLoading(true);
       setArgs([...newArgs]);
+      setFilteredPatterns(await filterPatterns(patterns, args));
+      await setInfoLoading(false);
     }
   };
 
+  // Init
   useEffect(() => {
-    setPatterns(generator.getAllPossiblePatterns(maxIncrement, highestNote));
+    const init = async () => {
+      setPageLoading(true);
+
+      const allPatterns = await getAllPossiblePatterns(maxIncrement, highestNote);
+      await setPatterns([...allPatterns]);
+      setFilteredPatterns(await filterPatterns(allPatterns, args));
+      await setPageLoading(false);
+    };
+
+    init();
   }, []);
 
   return (
     <div className="home-container">
+      {pageLoading && <LoadingDots />}
       <div className="inputFields">
         <div className="arguments">
-          <span>Arguments: </span>
-          <input type="number" min={-8} max={8} value={args[0]} onChange={(e) => onFilterChange(e, 0)} />
-          <input type="number" min={-8} max={8} value={args[1]} onChange={(e) => onFilterChange(e, 1)} />
-          <input type="number" min={-8} max={8} value={args[2]} onChange={(e) => onFilterChange(e, 2)} />
-          <input type="number" min={-8} max={8} value={args[3]} onChange={(e) => onFilterChange(e, 3)} />
+          <span>Arguments 3 out of {argumentsCount}: </span>
+          <input
+            type="number"
+            min={-maxIncrement}
+            max={maxIncrement}
+            value={args[0] === 0 ? '' : args[0]}
+            disabled={infoLoading ? true : false}
+            onChange={(e) => onFilterChange(e, 0)}
+          />
+          <input
+            type="number"
+            min={-maxIncrement}
+            max={maxIncrement}
+            value={args[1] === 0 ? '' : args[1]}
+            disabled={infoLoading ? true : false}
+            onChange={(e) => onFilterChange(e, 1)}
+          />
+          <input
+            type="number"
+            min={-maxIncrement}
+            max={maxIncrement}
+            value={args[2] === 0 ? '' : args[2]}
+            disabled={infoLoading ? true : false}
+            onChange={(e) => onFilterChange(e, 2)}
+          />
+          {/* <input
+            type="number"
+            min={-maxIncrement}
+            max={maxIncrement}
+            value={args[3] === 0 ? '' : args[3]}
+            disabled={infoLoading ? true : false}
+            onChange={(e) => onFilterChange(e, 3)}
+          /> */}
         </div>
         <div className="highest-note">
           <span>Max note: </span>
           <input type="number" disabled value={highestNote} />
         </div>
       </div>
-
-      <GridTable items={patterns} head={head} itemsPerPage={10} />
+      <GridTable items={filteredPatterns} head={head} loadingInfo={infoLoading} />
     </div>
   );
 }

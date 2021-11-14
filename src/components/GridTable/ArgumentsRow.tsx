@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC } from 'react';
 
 interface Props {
   args: Array<number>;
@@ -6,15 +6,14 @@ interface Props {
 
 const ArgumentsRow: FC<Props> = ({ args }) => {
   const mapIncrements = (n: number) => {
-    if (n > 0) return "+" + n;
-    else if (n === 0) return "";
+    if (n > 0) return '+' + n;
     else return n;
   };
 
   const renderArguments = () => {
     const notes = [];
     for (let i = 0; i < args.length; i++) {
-      notes.push(<div key={i}>{mapIncrements(args[i])}</div>);
+      if (args[i] !== 0) notes.push(<div key={i}>{mapIncrements(args[i])}</div>);
     }
     return notes;
   };
