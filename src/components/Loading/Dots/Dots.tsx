@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import './Dots.scss';
 
-function Dots() {
+const Dots: FC = () => {
   return (
     <div className="main">
       <div className="one"></div>
@@ -9,6 +9,6 @@ function Dots() {
       <div className="three"></div>
     </div>
   );
-}
+};
 
 export default Dots;

@@ -27,7 +27,7 @@ function Home() {
 
   const onFilterChange = async (e: any, index: number) => {
     const newArgs = args;
-    newArgs[index] = e.target.value == 0 ? '' : e.target.value;
+    newArgs[index] = Number(e.target.value);
 
     if (e.target.value >= -8 && e.target.value <= 8) {
       setInfoLoading(true);
@@ -47,8 +47,8 @@ function Home() {
       setFilteredPatterns(await filterPatterns(allPatterns, args));
       await setPageLoading(false);
     };
-
     init();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
