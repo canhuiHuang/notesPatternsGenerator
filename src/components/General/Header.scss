@@ -1,0 +1,10 @@
+@import "../../styles/main.scss";
+
+.header {
+  background-color: $dark-green-pastel;
+  padding: 12px 32px;
+
+  .logo {
+    font-weight: 600;
+  }
+}
