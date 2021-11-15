@@ -12,7 +12,6 @@ interface Pattern {
 function Home() {
   const head = ['🎶 Pattern', 'Arguments 🎼'];
   const maxIncrement = 8;
-  const argumentsCount = 4;
   const highestNote = 10;
 
   // Set up worker
@@ -38,6 +37,15 @@ function Home() {
       await setInfoLoading(false);
     }
   };
+  const onFilterReset = async () => {
+    setInfoLoading(true);
+    setArgs([0, 0, 0, 0]);
+    setFilteredPatterns(
+      await filterPatterns(patterns, [0, 0, 0, 0], argsSumFilter, { argsFilter: true, argsSumFilter: applyArgsSumFilter }),
+    );
+    await setInfoLoading(false);
+  };
+
   const onArgsSumChange = async (e: any) => {
     setInfoLoading(true);
     setArgsSumFilter(Number(e.target.value));
@@ -105,6 +113,9 @@ function Home() {
               disabled={infoLoading}
               onChange={(e) => onFilterChange(e, 3)}
             />
+            <button className="btn btn-primary" onClick={onFilterReset}>
+              Reset
+            </button>
           </div>
           <div className="sum-arguments">
             <span>Arguments Sum filters: </span>

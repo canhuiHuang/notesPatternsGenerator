@@ -26,6 +26,22 @@
       padding-left: 15px;
       font-weight: 600;
     }
+    .btn {
+      border-radius: 3px;
+      border: none;
+      border: 2px solid $green-pastel;
+      background-color: $green-pastel;
+      padding: 4px 20px;
+      color: rgb(24, 24, 24);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all ease 0.14s;
+    }
+    .btn:hover {
+      border: 2px solid $dark-green-pastel;
+      background-color: $dark-green-pastel;
+      transform: scale(1.03);
+    }
 
     .arguments {
       margin-right: 38px;
@@ -50,7 +66,7 @@
       }
       input[type='checkbox'] {
         position: absolute;
-        transform: translate(58px, 2px) scale(0.5);
+        transform: translate(18px, 2px) scale(0.5);
         -webkit-appearance: none;
         margin: auto;
         left: 0;
