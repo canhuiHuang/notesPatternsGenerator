@@ -49,7 +49,9 @@ function Home() {
   const onArgsSumChange = async (e: any) => {
     setInfoLoading(true);
     setArgsSumFilter(Number(e.target.value));
-    setFilteredPatterns(await filterPatterns(patterns, args, argsSumFilter, { argsFilter: true, argsSumFilter: applyArgsSumFilter }));
+    setFilteredPatterns(
+      await filterPatterns(patterns, args, Number(e.target.value), { argsFilter: true, argsSumFilter: applyArgsSumFilter }),
+    );
     await setInfoLoading(false);
   };
   const sumFilterSwitch = async () => {
