@@ -3,7 +3,7 @@ import ReactPaginate from 'react-paginate';
 import './GridTable.scss';
 import PatternRow from './PatternRow';
 import ArgumentsRow from './ArgumentsRow';
-import Select from '../Select/Select';
+// import Select from '../Select/Select';
 import LoadingSpinner from '../Loading/Spinner/Spinner';
 
 interface Pattern {
@@ -18,11 +18,18 @@ interface Props {
 }
 
 const GridTable: FC<Props> = ({ head, items, loadingInfo }) => {
-  const [loading, setLoading] = useState(true);
-  const [itemsPerPage, setItemsPerPage] = useState(12);
+  const itemsPerPage = 12;
   const [currentItems, setCurrentItems] = useState(items);
   const [pageCount, setPageCount] = useState(Math.ceil(items.length / itemsPerPage));
   const [itemOffset, setItemOffset] = useState(0);
+
+  const triggerPatternsBorder = (): void => {
+    const tableBody = document.querySelector('ul.gt-body');
+    if (tableBody?.classList.contains('show-border')) tableBody.classList.remove('show-border');
+    else {
+      tableBody?.classList.add('show-border');
+    }
+  };
 
   const tableHead = () => {
     const headLabels = [];
@@ -30,6 +37,7 @@ const GridTable: FC<Props> = ({ head, items, loadingInfo }) => {
       headLabels.push(
         <li className="gt-cell" key={i}>
           {head[i]}
+          {i === 0 && <i onClick={triggerPatternsBorder} className="fas fa-align-right border-icon"></i>}
         </li>,
       );
     }
@@ -58,9 +66,9 @@ const GridTable: FC<Props> = ({ head, items, loadingInfo }) => {
     setItemOffset(newOffset);
   };
 
-  const handleOptionSelect = (event: any): void => {
-    setItemsPerPage(event.target.value);
-  };
+  // const handleOptionSelect = (event: any): void => {
+  //   setItemsPerPage(event.target.value);
+  // };
 
   // Lifecycle
   useEffect(() => {

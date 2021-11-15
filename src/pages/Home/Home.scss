@@ -26,6 +26,22 @@
       padding-left: 15px;
       font-weight: 600;
     }
+    .btn {
+      border-radius: 3px;
+      border: none;
+      border: 2px solid $green-pastel;
+      background-color: $green-pastel;
+      padding: 4px 20px;
+      color: rgb(24, 24, 24);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all ease 0.14s;
+    }
+    .btn:hover {
+      border: 2px solid $dark-green-pastel;
+      background-color: $dark-green-pastel;
+      transform: scale(1.03);
+    }
 
     .arguments {
       margin-right: 38px;
@@ -36,8 +52,72 @@
     }
 
     .highest-note {
+      align-self: flex-end;
       input {
         width: 30px;
+      }
+    }
+
+    .sum-arguments {
+      margin-top: 10px;
+      position: relative;
+      input[type='checkbox']:focus {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
+      }
+      input[type='checkbox'] {
+        position: absolute;
+        transform: translate(18px, 2px) scale(0.5);
+        -webkit-appearance: none;
+        margin: auto;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        cursor: pointer;
+        outline: none;
+      }
+      .style4 {
+        height: 50px;
+        width: 100px;
+        background-color: white;
+        border-radius: 50px;
+        transition: 0.3s;
+      }
+      .style4:before {
+        content: '';
+        position: absolute;
+        height: 40px;
+        width: 40px;
+        background-color: $dark-green-pastel;
+        border-radius: 50%;
+        left: 8px;
+        top: 3px;
+        transition: 0.3s;
+      }
+      .style4:after {
+        content: 'OFF';
+        position: absolute;
+        font-size: 32px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        color: #e5e5e5;
+        left: 100px;
+        letter-spacing: 0.5px;
+        top: 4px;
+
+        transition: 0.3s;
+      }
+      .style4:checked {
+        background-color: $green-pastel;
+      }
+      .style4:checked:before {
+        background-color: white;
+        left: 48px;
+      }
+      .style4:checked:after {
+        top: 4px;
+        content: 'ON';
+        color: $dark-green-pastel;
       }
     }
   }

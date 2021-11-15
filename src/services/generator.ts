@@ -2,6 +2,10 @@ interface Pattern {
   pattern: Array<number>;
   args: Array<number>;
 }
+interface Filters {
+  argsFilter: boolean;
+  argsSumFilter: boolean;
+}
 
 const getPattern = (args: Array<number>, maxNote: number): Pattern => {
   // Calculate the sum of increments & return empty pattern if sum <= 0
@@ -82,13 +86,8 @@ const getAllPossiblePatterns = (maxIncrement: number, maxNote: number): Array<Pa
   return patterns;
 };
 
-const filterPatterns = (list: Array<Pattern>, args: Array<number>): Array<Pattern> => {
-  //setLoading(true);
-
-  // If there are no arguments
-  if (args[0] === 0 && args[1] === 0 && args[2] === 0) {
-    return list;
-  }
+const filterPatterns = (list: Array<Pattern>, args: Array<number>, argsSum: number, filters: Filters): Array<Pattern> => {
+  const { argsFilter, argsSumFilter } = filters;
 
   // Find all patterns that match
   const currentPatterns: Array<Pattern> = [];
@@ -105,50 +104,47 @@ const filterPatterns = (list: Array<Pattern>, args: Array<number>): Array<Patter
     // Find match
     const patternArgs = list[i].args;
 
+    // Calculate current args sum
+    let currentSum = 0;
+    for (let j = 0; j < patternArgs.length; j++) {
+      currentSum += patternArgs[j];
+    }
+
+    const push = () => {
+      if (argsSumFilter) {
+        if (currentSum === argsSum) currentPatterns.push(list[i]);
+      } else {
+        currentPatterns.push(list[i]);
+      }
+    };
+
     switch (currentArgs.length) {
       case 1:
-        for (let j = 0; j < 4; j++) {
-          if (currentArgs[0] == patternArgs[j]) {
-            currentPatterns.push(list[i]);
-          }
+        if (currentArgs[0] == patternArgs[0]) {
+          push();
         }
         break;
       case 2:
-        for (let j = 0; j < 4; j++) {
-          if (currentArgs[0] == patternArgs[j] && currentArgs[1] == patternArgs[(1 + j) % 4]) {
-            currentPatterns.push(list[i]);
-          }
-        }
+        if (currentArgs[0] == patternArgs[0] && currentArgs[1] == patternArgs[1]) push();
         break;
       case 3:
-        for (let j = 0; j < 4; j++) {
-          if (
-            currentArgs[0] == patternArgs[j] &&
-            currentArgs[1] == patternArgs[(1 + j) % 4] &&
-            currentArgs[2] == patternArgs[(2 + j) % 4]
-          ) {
-            currentPatterns.push(list[i]);
-          }
-        }
+        if (currentArgs[0] == patternArgs[0] && currentArgs[1] == patternArgs[1] && currentArgs[2] == patternArgs[2]) push();
         break;
       case 4:
-        for (let j = 0; j < 4; j++) {
-          if (
-            currentArgs[0] == patternArgs[j] &&
-            currentArgs[1] == patternArgs[(1 + j) % 4] &&
-            currentArgs[2] == patternArgs[(2 + j) % 4] &&
-            currentArgs[3] == patternArgs[(3 + j) % 4]
-          ) {
-            currentPatterns.push(list[i]);
-          }
-        }
+        if (
+          currentArgs[0] == patternArgs[0] &&
+          currentArgs[1] == patternArgs[1] &&
+          currentArgs[2] == patternArgs[2] &&
+          currentArgs[3] == patternArgs[3]
+        )
+          push();
         break;
 
       default:
-        currentPatterns.push(list[i]);
+        push();
+        break;
     }
   }
-  //setLoading(false);
   return currentPatterns;
 };
 
