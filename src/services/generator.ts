@@ -89,11 +89,6 @@ const getAllPossiblePatterns = (maxIncrement: number, maxNote: number): Array<Pa
 const filterPatterns = (list: Array<Pattern>, args: Array<number>, argsSum: number, filters: Filters): Array<Pattern> => {
   const { argsFilter, argsSumFilter } = filters;
 
-  // If there are no arguments
-  // if (args[0] === 0 && args[1] === 0 && args[2] === 0) {
-  //   return list;
-  // }
-
   // Find all patterns that match
   const currentPatterns: Array<Pattern> = [];
 
@@ -150,7 +145,6 @@ const filterPatterns = (list: Array<Pattern>, args: Array<number>, argsSum: numb
         break;
     }
   }
-  //setLoading(false);
   return currentPatterns;
 };
 
