@@ -47,6 +47,12 @@
       border-radius: 0 0 5px 5px;
       flex-direction: column;
 
+      &.show-border {
+        .pattern-row {
+          border-right: 2px dashed rgba(231, 238, 227, 0.69);
+        }
+      }
+
       li {
         display: flex;
         justify-content: space-between;
@@ -72,6 +78,7 @@
           .pattern-row {
             width: 600px;
             overflow-x: scroll;
+
             > div {
               min-width: 12px;
               max-width: 12px;
@@ -176,5 +183,17 @@
     background-color: $dark-green-pastel;
     color: rgb(43, 42, 42);
     font-weight: 500;
+  }
+}
+
+.border-icon {
+  color: rgb(64, 73, 57);
+  margin-left: 10px;
+  transition: all ease 0.18s;
+  cursor: pointer;
+
+  &:hover {
+    color: rgb(126, 153, 106);
+    transform: scale(1.08);
   }
 }

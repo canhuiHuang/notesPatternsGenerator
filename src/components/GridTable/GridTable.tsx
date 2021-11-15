@@ -23,12 +23,21 @@ const GridTable: FC<Props> = ({ head, items, loadingInfo }) => {
   const [pageCount, setPageCount] = useState(Math.ceil(items.length / itemsPerPage));
   const [itemOffset, setItemOffset] = useState(0);
 
+  const triggerPatternsBorder = (): void => {
+    const tableBody = document.querySelector('ul.gt-body');
+    if (tableBody?.classList.contains('show-border')) tableBody.classList.remove('show-border');
+    else {
+      tableBody?.classList.add('show-border');
+    }
+  };
+
   const tableHead = () => {
     const headLabels = [];
     for (let i = 0; i < head.length; i++) {
       headLabels.push(
         <li className="gt-cell" key={i}>
           {head[i]}
+          {i === 0 && <i onClick={triggerPatternsBorder} className="fas fa-align-right border-icon"></i>}
         </li>,
       );
     }
