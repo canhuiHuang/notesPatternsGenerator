@@ -12,19 +12,36 @@ interface Pattern {
 function Home() {
   const head = ['🎶 Pattern', 'Arguments 🎼'];
   const maxIncrement = 8;
-  const highestNote = 10;
+  const highestNote = 17;
 
   // Set up worker
   const worker = new Worker('./worker', { name: 'runGeneratorWorker', type: 'module' });
   const { getAllPossiblePatterns, filterPatterns } = wrap<import('./worker').RunGeneratorWorker>(worker);
+
+  // Other setups
+  let applyArgsSum: boolean = false;
+  if (localStorage.getItem('applyArgsSum') !== null) {
+    applyArgsSum = JSON.parse(localStorage.getItem('applyArgsSum')!);
+  }
 
   const [pageLoading, setPageLoading] = useState<boolean>(true);
   const [infoLoading, setInfoLoading] = useState<boolean>(false);
   const [patterns, setPatterns] = useState<Array<Pattern>>([]);
   const [filteredPatterns, setFilteredPatterns] = useState<Array<Pattern>>([]);
   const [argsSumFilter, setArgsSumFilter] = useState<number>(8);
-  const [applyArgsSumFilter, setApplyArgsSumFilter] = useState<boolean>(false);
-  const [args, setArgs] = useState<Array<number>>([-2, 2, -2, 2]);
+
+  const [applyArgsSumFilter, setApplyArgsSumFilter] = useState<boolean>(applyArgsSum);
+  const [args, setArgs] = useState<Array<number>>([0, 0, 0, 0]);
+
+  const setFilters = (args: Array<number>, argsSum: number, applyArgsSum: boolean) => {
+    localStorage.setItem('args', JSON.stringify(args));
+    localStorage.setItem('argsSum', JSON.stringify(argsSum));
+    localStorage.setItem('applyArgsSum', JSON.stringify(applyArgsSum));
+
+    setArgs(args);
+    setArgsSumFilter(argsSum);
+    setApplyArgsSumFilter(applyArgsSum);
+  };
 
   const onFilterChange = async (e: any, index: number) => {
     const newArgs = args;
@@ -32,14 +49,14 @@ function Home() {
 
     if (e.target.value >= -maxIncrement && e.target.value <= maxIncrement) {
       setInfoLoading(true);
-      setArgs([...newArgs]);
+      setFilters([...newArgs], argsSumFilter, applyArgsSumFilter);
       setFilteredPatterns(await filterPatterns(patterns, args, argsSumFilter, { argsFilter: true, argsSumFilter: applyArgsSumFilter }));
       await setInfoLoading(false);
     }
   };
   const onFilterReset = async () => {
     setInfoLoading(true);
-    setArgs([0, 0, 0, 0]);
+    setFilters([0, 0, 0, 0], argsSumFilter, applyArgsSumFilter);
     setFilteredPatterns(
       await filterPatterns(patterns, [0, 0, 0, 0], argsSumFilter, { argsFilter: true, argsSumFilter: applyArgsSumFilter }),
     );
@@ -48,7 +65,7 @@ function Home() {
 
   const onArgsSumChange = async (e: any) => {
     setInfoLoading(true);
-    setArgsSumFilter(Number(e.target.value));
+    setFilters(args, Number(e.target.value), applyArgsSumFilter);
     setFilteredPatterns(
       await filterPatterns(patterns, args, Number(e.target.value), { argsFilter: true, argsSumFilter: applyArgsSumFilter }),
     );
@@ -58,7 +75,7 @@ function Home() {
     setInfoLoading(true);
 
     setFilteredPatterns(await filterPatterns(patterns, args, argsSumFilter, { argsFilter: true, argsSumFilter: !applyArgsSumFilter }));
-    setApplyArgsSumFilter(!applyArgsSumFilter);
+    setFilters(args, argsSumFilter, !applyArgsSumFilter);
     await setInfoLoading(false);
   };
 
@@ -66,6 +83,22 @@ function Home() {
   useEffect(() => {
     const init = async () => {
       setPageLoading(true);
+
+      // Load filters from local storage
+      const loadFiltersFromLocalStorage = () => {
+        if (localStorage.getItem('args') !== null) {
+          setArgs(JSON.parse(localStorage.getItem('args')!));
+        }
+
+        if (localStorage.getItem('argsSum') !== null) {
+          setArgsSumFilter(JSON.parse(localStorage.getItem('argsSum')!));
+        }
+
+        if (localStorage.getItem('applyArgsSum') !== null) {
+          setApplyArgsSumFilter(JSON.parse(localStorage.getItem('applyArgsSum')!));
+        }
+      };
+      await loadFiltersFromLocalStorage();
 
       const allPatterns = await getAllPossiblePatterns(maxIncrement, highestNote);
       await setPatterns([...allPatterns]);

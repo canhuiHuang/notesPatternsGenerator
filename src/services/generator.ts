@@ -6,74 +6,90 @@ interface Filters {
   argsFilter: boolean;
   argsSumFilter: boolean;
 }
-// Interpret the resulting negative notes
-const dict = [-7, -1, -2, -3, -4, -5, -6];
+interface Dict {
+  [key: string]: number;
+}
+
+// Rules:
+// Notes spectrum: [-1,-2,-3,-4,-5,-6,-7,1,2,3,4,5, ..., maxNote]
+// Generate pattern until reaches 17 or beyond. Once that point is reach, the arguments are multiplied by -1 so that new notes are generated with these arguments. The order of arguments resets as well. Stops when note <= 1.
+// When sum of arguments is equal to 0, stops generating notes when new note is <= 1 whether 17 or beyond is reached or not.
+// Do not produce patterns whose sum of argument are negative.
+// If note generated goes beyond -1, stop.
 
 const getPattern = (args: Array<number>, maxNote: number): Pattern => {
-  // Calculate the sum of increments & return empty pattern if sum <= 0
+  // Notes interpretation saved in a dictionary
+  const dict: Dict = { '0': -7, '-1': -6, '-2': -5, '-3': -4, '-4': -3, '-5': -2, '-6': -1 };
+  for (let i = 1; i <= maxNote; i++) {
+    dict[i.toString()] = i;
+  }
+
+  // Calculate the sum of increments
   let incrementsSum = 0;
   for (let i = 0; i < args.length; i++) {
     incrementsSum += args[i];
   }
+
+  // Return empty pattern if sum of increments < 0
   if (incrementsSum < 0) return { pattern: [], args };
 
   // Generate pattern
   const pattern = [1];
+
+  // Run indicates whether keep producing pattern or not
   let run = true;
+
+  // Indicates whether the pattern has just started to produce
+  let justStarted = true;
+
+  // Holds the note
+  let note: number = 1;
+
+  // Pattern generation PHASE 1
   for (let currentNote = 1, incrementIndex = 0; currentNote < maxNote && run; incrementIndex = (incrementIndex + 1) % args.length) {
+    // New note generation
     currentNote += args[incrementIndex];
 
-    // If args Sum == 0 & currentNote is 1 or less.
-    if (incrementsSum === 0 && currentNote <= 1) {
+    // If note goes beyond -1, stops
+    if (currentNote <= -7) {
       run = false;
     }
 
-    // Interpret the resulting negative notes
-    // 0 --> 7
-    // -1 --> 6
-    // -2 --> 5
-    // -3 --> 4
-    // -4 --> 3
-    // -5 --> 2
-    // -6 --> 1
-    // -7 --> 7
+    // Interpret new note
+    note = dict[currentNote.toString()];
+
+    // If args Sum == 0 & currentNote is 1 or less.
+    if (incrementsSum === 0 && note <= 1 && !justStarted) {
+      run = false;
+    }
+    justStarted = false;
+
+    // Push note to pattern if less or equal than maxNote and if current increment is not zero
+    if (note <= maxNote && args[incrementIndex] !== 0) {
+      pattern.push(note);
+    }
+  }
+
+  // Pattern generation PHASE 2
+  for (
+    let currentNote = pattern[pattern.length - 1], incrementIndex = 0;
+    currentNote > 1 && run;
+    incrementIndex = (incrementIndex + 1) % args.length
+  ) {
+    // New note generation
+    currentNote -= args[incrementIndex];
+
+    // If note goes beyond 0, stops
     if (currentNote <= 0) {
-      if (currentNote <= -7) {
-        currentNote = 1;
-        run = false;
-      } else {
-        switch (currentNote) {
-          case 0:
-            currentNote = -7;
-            break;
-          case -1:
-            currentNote = -6;
-            break;
-          case -2:
-            currentNote = -5;
-            break;
-          case -3:
-            currentNote = -4;
-            break;
-          case -4:
-            currentNote = -3;
-            break;
-          case -5:
-            currentNote = -2;
-            break;
-          case -6:
-            currentNote = -1;
-            break;
-          default:
-            currentNote = -7;
-            break;
-        }
-      }
+      run = false;
     }
 
-    // Push note to pattern if less or equal than 10 and if current increment is not zero
-    if (currentNote <= maxNote && args[incrementIndex] !== 0) {
-      pattern.push(currentNote);
+    // Interpret new note
+    note = dict[currentNote.toString()];
+
+    // Push note to pattern if greater or equal than 1 and if current increment is not zero
+    if (note >= 1 && args[incrementIndex] !== 0) {
+      pattern.push(note);
     }
   }
 
