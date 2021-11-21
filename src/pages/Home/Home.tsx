@@ -24,13 +24,13 @@ function Home() {
   const [filteredPatterns, setFilteredPatterns] = useState<Array<Pattern>>([]);
   const [argsSumFilter, setArgsSumFilter] = useState<number>(8);
   const [applyArgsSumFilter, setApplyArgsSumFilter] = useState<boolean>(false);
-  const [args, setArgs] = useState<Array<number>>([3, 4, 2, 0]);
+  const [args, setArgs] = useState<Array<number>>([-2, 2, -2, 2]);
 
   const onFilterChange = async (e: any, index: number) => {
     const newArgs = args;
     newArgs[index] = Number(e.target.value);
 
-    if (e.target.value >= -8 && e.target.value <= 8) {
+    if (e.target.value >= -maxIncrement && e.target.value <= maxIncrement) {
       setInfoLoading(true);
       setArgs([...newArgs]);
       setFilteredPatterns(await filterPatterns(patterns, args, argsSumFilter, { argsFilter: true, argsSumFilter: applyArgsSumFilter }));

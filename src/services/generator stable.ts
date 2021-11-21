@@ -6,11 +6,12 @@ interface Filters {
   argsFilter: boolean;
   argsSumFilter: boolean;
 }
-// Interpret the resulting negative notes
-const dict = [-7, -1, -2, -3, -4, -5, -6];
+interface Dict {
+  [key: string]: number;
+}
 
 const getPattern = (args: Array<number>, maxNote: number): Pattern => {
-  // Calculate the sum of increments & return empty pattern if sum <= 0
+  // Calculate the sum of increments & return empty pattern if sum < 0
   let incrementsSum = 0;
   for (let i = 0; i < args.length; i++) {
     incrementsSum += args[i];
@@ -18,9 +19,10 @@ const getPattern = (args: Array<number>, maxNote: number): Pattern => {
   if (incrementsSum < 0) return { pattern: [], args };
 
   // Generate pattern
-  const pattern = [1];
   let run = true;
-  for (let currentNote = 1, incrementIndex = 0; currentNote < maxNote && run; incrementIndex = (incrementIndex + 1) % args.length) {
+  const pattern = [1];
+  let currentNote: number = 1;
+  for (let incrementIndex = 0; currentNote < maxNote && run; incrementIndex = (incrementIndex + 1) % args.length) {
     currentNote += args[incrementIndex];
 
     // If args Sum == 0 & currentNote is 1 or less.
@@ -28,52 +30,50 @@ const getPattern = (args: Array<number>, maxNote: number): Pattern => {
       run = false;
     }
 
+    // If currentNote generated is less or equal to zero. Convert to to it's equivalence.
+
     // Interpret the resulting negative notes
-    // 0 --> 7
-    // -1 --> 6
-    // -2 --> 5
-    // -3 --> 4
-    // -4 --> 3
-    // -5 --> 2
-    // -6 --> 1
-    // -7 --> 7
+    const dict: Dict = { '0': -7, '-1': -6, '-2': -5, '-3': -4, '-4': -3, '-5': -2, '-6': -1 };
+
+    // 0 --> -7
+    // -1 --> -6
+    // -2 --> -5
+    // -3 --> -4
+    // -4 --> -3
+    // -5 --> -2
+    // -6 --> -1
+    // -7 --> 1 STOP
+
     if (currentNote <= 0) {
       if (currentNote <= -7) {
         currentNote = 1;
         run = false;
       } else {
-        switch (currentNote) {
-          case 0:
-            currentNote = -7;
-            break;
-          case -1:
-            currentNote = -6;
-            break;
-          case -2:
-            currentNote = -5;
-            break;
-          case -3:
-            currentNote = -4;
-            break;
-          case -4:
-            currentNote = -3;
-            break;
-          case -5:
-            currentNote = -2;
-            break;
-          case -6:
-            currentNote = -1;
-            break;
-          default:
-            currentNote = -7;
-            break;
-        }
+        currentNote = dict[currentNote.toString()];
       }
     }
 
-    // Push note to pattern if less or equal than 10 and if current increment is not zero
+    // Push note to pattern if less or equal than maxNote and if current increment is not zero
+
+    // -7 --> 1 gets added
+    // 17 does get in
+    // 17 +2 = 19 does not get in
     if (currentNote <= maxNote && args[incrementIndex] !== 0) {
       pattern.push(currentNote);
+    } else {
+      currentNote -= args[incrementIndex];
+    }
+  }
+
+  // Reverse arguments
+  if (run) {
+    for (let incrementIndex = 0; currentNote > 1; incrementIndex = (incrementIndex + 1) % args.length) {
+      currentNote -= args[incrementIndex];
+
+      // Push note to pattern if less or equal than 1 and if current increment is not zero
+      if (currentNote >= maxNote && args[incrementIndex] !== 0) {
+        pattern.push(currentNote);
+      }
     }
   }
 
@@ -81,6 +81,7 @@ const getPattern = (args: Array<number>, maxNote: number): Pattern => {
 };
 
 const getAllPossiblePatterns = (maxIncrement: number, maxNote: number): Array<Pattern> => {
+  console.log('hahah');
   const patterns: Array<Pattern> = [];
   // 1 arguments (17 executions)
   for (let i = 1; i <= maxIncrement; i++) {
@@ -102,6 +103,7 @@ const getAllPossiblePatterns = (maxIncrement: number, maxNote: number): Array<Pa
     for (let j = -maxIncrement; j <= maxIncrement; j++) {
       for (let k = -maxIncrement; k <= maxIncrement; k++) {
         if (k !== 0) patterns.push(getPattern([i, j, k, 0], maxNote));
+        console.log(i, j, k);
       }
     }
   }
