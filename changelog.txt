@@ -1,9 +1,6 @@
 - New Notes Spectrum: -1, -2, -3, -4, -5, -6, -7, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17
 - If 1 - 8, stop
 - [NEW: Include patterns whose sum is equal to 0], rule: stops when 1 or beyond (whether 17 has been reached or not) or 17 and beyond is reached.
-- If the next note to generate is greater than 17, 
 - When 17 is reached or passed, arguments orders reset and they are multiplied by -1. Then stop the pattern when 1 or beyond 1 is reached.
-
-
-
-1 -6 1
+- Now, filters are stored in the browser. So filters are kept even after the application restarts.
+- Site is usable for 2240 x 1080 px (Huawei P20 pro) 155.00 x 73.90 x 7.80

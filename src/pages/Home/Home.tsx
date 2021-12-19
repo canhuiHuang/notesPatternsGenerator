@@ -116,46 +116,50 @@ function Home() {
         <div className="filters">
           <div className="arguments">
             <span>Arguments filters: </span>
-            <input
-              type="number"
-              min={-maxIncrement}
-              max={maxIncrement}
-              value={args[0] === 0 ? '' : args[0]}
-              disabled={infoLoading}
-              onChange={(e) => onFilterChange(e, 0)}
-            />
-            <input
-              type="number"
-              min={-maxIncrement}
-              max={maxIncrement}
-              value={args[1] === 0 ? '' : args[1]}
-              disabled={infoLoading}
-              onChange={(e) => onFilterChange(e, 1)}
-            />
-            <input
-              type="number"
-              min={-maxIncrement}
-              max={maxIncrement}
-              value={args[2] === 0 ? '' : args[2]}
-              disabled={infoLoading}
-              onChange={(e) => onFilterChange(e, 2)}
-            />
-            <input
-              type="number"
-              min={-maxIncrement}
-              max={maxIncrement}
-              value={args[3] === 0 ? '' : args[3]}
-              disabled={infoLoading}
-              onChange={(e) => onFilterChange(e, 3)}
-            />
-            <button className="btn btn-primary" onClick={onFilterReset}>
-              Reset
-            </button>
+            <div className="args-filters">
+              <input
+                type="number"
+                min={-maxIncrement}
+                max={maxIncrement}
+                value={args[0] === 0 ? '' : args[0]}
+                disabled={infoLoading}
+                onChange={(e) => onFilterChange(e, 0)}
+              />
+              <input
+                type="number"
+                min={-maxIncrement}
+                max={maxIncrement}
+                value={args[1] === 0 ? '' : args[1]}
+                disabled={infoLoading}
+                onChange={(e) => onFilterChange(e, 1)}
+              />
+              <input
+                type="number"
+                min={-maxIncrement}
+                max={maxIncrement}
+                value={args[2] === 0 ? '' : args[2]}
+                disabled={infoLoading}
+                onChange={(e) => onFilterChange(e, 2)}
+              />
+              <input
+                type="number"
+                min={-maxIncrement}
+                max={maxIncrement}
+                value={args[3] === 0 ? '' : args[3]}
+                disabled={infoLoading}
+                onChange={(e) => onFilterChange(e, 3)}
+              />
+              <button className="btn btn-primary" onClick={onFilterReset}>
+                Reset
+              </button>
+            </div>
           </div>
           <div className="sum-arguments">
-            <span>Arguments Sum filters: </span>
-            <input type="number" value={argsSumFilter} disabled={infoLoading} onChange={onArgsSumChange} />
-            <input type="checkbox" className="style4" defaultChecked={applyArgsSumFilter} onChange={sumFilterSwitch} />
+            <div className="label">Arguments Sum filters: </div>
+            <div className="btns">
+              <input type="number" value={argsSumFilter} disabled={infoLoading} onChange={onArgsSumChange} />
+              <input type="checkbox" className="style4" defaultChecked={applyArgsSumFilter} onChange={sumFilterSwitch} />
+            </div>
           </div>
         </div>
 
@@ -164,7 +168,7 @@ function Home() {
           <input type="number" disabled value={highestNote} />
         </div>
       </div>
-      <GridTable items={filteredPatterns} head={head} loadingInfo={infoLoading} />
+      <GridTable items={filteredPatterns} head={head} loadingInfo={infoLoading} pageReset={applyArgsSumFilter} />
     </div>
   );
 }

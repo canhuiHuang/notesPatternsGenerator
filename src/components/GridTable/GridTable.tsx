@@ -15,9 +15,10 @@ interface Props {
   head: Array<String>;
   items: Array<Pattern>;
   loadingInfo: Boolean;
+  pageReset: boolean;
 }
 
-const GridTable: FC<Props> = ({ head, items, loadingInfo }) => {
+const GridTable: FC<Props> = ({ head, items, loadingInfo, pageReset }) => {
   const itemsPerPage = 12;
   const [currentItems, setCurrentItems] = useState(items);
   const [pageCount, setPageCount] = useState(Math.ceil(items.length / itemsPerPage));
@@ -117,7 +118,7 @@ const GridTable: FC<Props> = ({ head, items, loadingInfo }) => {
         <li className="gt-cell" key={i}>
           {i === 1 && copied === 'arguments' && <span className="copied-text right">COPIED</span>}
           {i === 0 && <i onClick={grabOnPagePatterns} className="far fa-copy left"></i>}
-          {head[i]}
+          <span className={`text-${i}`}>{head[i]}</span>
           {i === 1 && <i onClick={grabOnPageArguments} className="far fa-copy right"></i>}
           {i === 0 && <i onClick={triggerPatternsBorder} className="fas fa-align-right border-icon"></i>}
           {i === 0 && copied === 'patterns' && <span className="copied-text left">COPIED</span>}
@@ -159,6 +160,10 @@ const GridTable: FC<Props> = ({ head, items, loadingInfo }) => {
     setCurrentItems(items.slice(itemOffset, endOffset));
     setPageCount(Math.ceil(items.length / itemsPerPage));
   }, [itemOffset, itemsPerPage, items]);
+
+  useEffect(() => {
+    setItemOffset(0);
+  }, [pageReset]);
 
   return (
     <div className="grid-table-container">

@@ -132,6 +132,12 @@
       }
     }
 
+    .sum-arguments {
+      .btns {
+        display: inline;
+      }
+    }
+
     // Copied stlyes
     .fa-copy {
       font-size: 19px;
@@ -236,5 +242,87 @@
   &:hover {
     color: rgb(126, 153, 106);
     transform: scale(1.08);
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .inputFields,
+  .grid-table ul.gt-head,
+  .grid-table ul.gt-body {
+    min-width: 0 !important;
+  }
+  .grid-table-container {
+    .grid-table {
+      min-width: 90%;
+    }
+
+    .gt-head {
+      font-size: 12px !important;
+
+      li {
+        height: 23px !important;
+
+        &:first-child {
+          padding-left: 24px !important;
+        }
+        &:last-child {
+          padding-right: 24px !important;
+        }
+
+        .text-1 {
+          opacity: 0;
+        }
+
+        i {
+          &.left {
+            margin-right: 10px !important;
+          }
+          &.right {
+            margin-left: 10px !important;
+          }
+          transform: scale(0.8);
+
+          &:hover {
+            transform: scale(0.85) !important;
+          }
+        }
+      }
+    }
+
+    .grid-table ul.gt-head,
+    .grid-table ul.gt-body {
+      width: 100%;
+
+      li {
+        height: 45px;
+        .gt-cell {
+        }
+      }
+    }
+
+    .arguments-row {
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .pattern-row {
+      width: 258px !important;
+
+      > div {
+        padding: 8px !important;
+        margin: 0.2rem !important;
+        margin-bottom: 4px !important;
+
+        &:hover {
+          background-color: rgb(239, 241, 236);
+          transform: scale(1.08);
+        }
+      }
+    }
+  }
+
+  .paginator {
+    transform: scale(0.8);
+    margin-top: 0;
   }
 }
