@@ -147,6 +147,7 @@
   }
   .arguments {
     flex-direction: column;
+    margin-right: 0 !important;
 
     input:first-child {
       margin-left: 0 !important;
@@ -155,7 +156,7 @@
 
   .sum-arguments {
     input[type='checkbox'] {
-      transform: translate(92px, 0px) scale(0.5) !important;
+      transform: translate(110px, 0px) scale(0.5) !important;
     }
   }
 
